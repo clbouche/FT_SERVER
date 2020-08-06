@@ -3,35 +3,34 @@
 #                                                         :::      ::::::::    #
 #    Dockerfile                                         :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: clbouche <clbouche@student.42.fr>          +#+  +:+       +#+         #
+#    By: clbouche <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/04/26 19:38:18 by clbouche          #+#    #+#              #
-#    Updated: 2020/05/13 13:54:52 by clbouche         ###   ########.fr        #
+#    Created: 2020/03/04 18:23:03 by clbouche          #+#    #+#              #
+#    Updated: 2020/03/12 17:42:06 by clbouche         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #IMAGE
 FROM debian:buster
 
-#OWNER
+#container owner
 MAINTAINER clbouche@student.42.fr
 
-#UPDATE
-RUN apt-get update && apt dist-upgrade && apt-get install nano && apt-get install -y wget
+# update the software repository
+RUN apt-get update && apt-get install -y wget
 
-#NGINX
+#install EngineX
 RUN apt-get -y install nginx
 
-#SSL
-RUN apt-get -y install openssl
-
-#MySQL
-RUN apt-get -y install mariadb-server
-
-#PHP
+#install PHPmyAdmin
 RUN apt-get -y install php7.3-fpm php7.3-common php7.3-mysql php7.3-gmp php7.3-curl php7.3-intl php7.3-mbstring php7.3-xmlrpc php7.3-gd php7.3-xml php7.3-cli php7.3-zip php7.3-soap php7.3-imap
 
-COPY ./srcs/init.sh ./
-COPY ./srcs/nginx.conf ./tmp
+#install mariaDB (database)
+RUN apt-get -y install mariadb-server
 
-CMD bash init.sh
+COPY ./srcs/init.sh ./
+COPY ./srcs/nginx.conf ./tmp/
+COPY ./srcs/phpmyadmin.inc.php ./tmp/phpmyadmin.inc.php
+COPY ./srcs/wp-config.php ./tmp/wp-config.php
+
+CMD bash init.sh 
